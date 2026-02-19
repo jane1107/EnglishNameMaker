@@ -9,7 +9,13 @@ const initialForm = {
 };
 
 const genderOptions = ["여자", "남자", "중성", "선택안함"];
-const styleOptions = ["세련된", "부르기 쉬운", "아름다운", "유니크한", "선택안함"];
+const styleOptions = [
+  "세련된",
+  "부르기 쉬운",
+  "아름다운",
+  "유니크한",
+  "선택안함",
+];
 
 const defaultResult = {
   primaryName: {
@@ -134,7 +140,9 @@ function buildResultImage(result, form) {
 
   const measuredSections = sections.map((section) => ({
     title: section.title,
-    lines: section.lines.flatMap((line) => wrapCanvasText(measureCtx, line, textWidth)),
+    lines: section.lines.flatMap((line) =>
+      wrapCanvasText(measureCtx, line, textWidth),
+    ),
   }));
 
   let contentHeight = 0;
@@ -158,7 +166,12 @@ function buildResultImage(result, form) {
     throw new Error("이미지 생성에 필요한 Canvas를 사용할 수 없습니다.");
   }
 
-  const backgroundGradient = ctx.createLinearGradient(0, 0, canvasWidth, canvasHeight);
+  const backgroundGradient = ctx.createLinearGradient(
+    0,
+    0,
+    canvasWidth,
+    canvasHeight,
+  );
   backgroundGradient.addColorStop(0, "#f8fbff");
   backgroundGradient.addColorStop(0.45, "#eef3ff");
   backgroundGradient.addColorStop(1, "#fff4e9");
@@ -189,18 +202,21 @@ function buildResultImage(result, form) {
   const x = cardX + cardPadding;
 
   ctx.fillStyle = "#5c6f98";
-  ctx.font = '600 24px "Noto Sans KR", "Apple SD Gothic Neo", "Segoe UI", sans-serif';
+  ctx.font =
+    '600 24px "Noto Sans KR", "Apple SD Gothic Neo", "Segoe UI", sans-serif';
   ctx.fillText("AI Naming Studio", x, y);
 
   y += 60;
   ctx.fillStyle = "#15274e";
-  ctx.font = '700 58px "Noto Sans KR", "Apple SD Gothic Neo", "Segoe UI", sans-serif';
+  ctx.font =
+    '700 58px "Noto Sans KR", "Apple SD Gothic Neo", "Segoe UI", sans-serif';
   ctx.fillText(result.primaryName.name || "영어 이름 추천", x, y);
 
   y += 44;
   if (result.primaryName.hangulPronunciation) {
     ctx.fillStyle = "#2f476f";
-    ctx.font = '600 30px "Noto Sans KR", "Apple SD Gothic Neo", "Segoe UI", sans-serif';
+    ctx.font =
+      '600 30px "Noto Sans KR", "Apple SD Gothic Neo", "Segoe UI", sans-serif';
     ctx.fillText(result.primaryName.hangulPronunciation, x, y);
     y += 40;
   }
@@ -209,7 +225,11 @@ function buildResultImage(result, form) {
     ctx.fillStyle = "#3f5378";
     ctx.font =
       '500 30px "Noto Sans KR", "Apple SD Gothic Neo", "Segoe UI", sans-serif';
-    const taglineLines = wrapCanvasText(ctx, result.primaryName.tagline, textWidth);
+    const taglineLines = wrapCanvasText(
+      ctx,
+      result.primaryName.tagline,
+      textWidth,
+    );
     for (const line of taglineLines) {
       ctx.fillText(line, x, y);
       y += lineHeight;
@@ -228,7 +248,8 @@ function buildResultImage(result, form) {
 
   for (const section of measuredSections) {
     ctx.fillStyle = "#24355b";
-    ctx.font = '700 32px "Noto Sans KR", "Apple SD Gothic Neo", "Segoe UI", sans-serif';
+    ctx.font =
+      '700 32px "Noto Sans KR", "Apple SD Gothic Neo", "Segoe UI", sans-serif';
     ctx.fillText(section.title, x, y);
     y += 42;
 
@@ -244,7 +265,8 @@ function buildResultImage(result, form) {
 
   const dateLabel = new Date().toLocaleDateString("ko-KR");
   ctx.fillStyle = "#6b7d9c";
-  ctx.font = '500 22px "Noto Sans KR", "Apple SD Gothic Neo", "Segoe UI", sans-serif';
+  ctx.font =
+    '500 22px "Noto Sans KR", "Apple SD Gothic Neo", "Segoe UI", sans-serif';
   ctx.fillText(`생성일: ${dateLabel}`, x, cardY + cardHeight - 24);
 
   return canvas;
@@ -489,6 +511,26 @@ function App() {
           </label>
 
           <label>
+            생년월일
+            <input
+              name="birthDate"
+              type="date"
+              value={form.birthDate}
+              onChange={handleChange}
+            />
+          </label>
+
+          <label>
+            태어난 시간
+            <input
+              name="birthTime"
+              type="time"
+              value={form.birthTime}
+              onChange={handleChange}
+            />
+          </label>
+
+          <label>
             성별
             <select name="gender" value={form.gender} onChange={handleChange}>
               {genderOptions.map((option) => (
@@ -508,26 +550,6 @@ function App() {
                 </option>
               ))}
             </select>
-          </label>
-
-          <label>
-            생년월일
-            <input
-              name="birthDate"
-              type="date"
-              value={form.birthDate}
-              onChange={handleChange}
-            />
-          </label>
-
-          <label>
-            태어난 시간
-            <input
-              name="birthTime"
-              type="time"
-              value={form.birthTime}
-              onChange={handleChange}
-            />
           </label>
 
           <button type="submit" disabled={!canSubmit}>
